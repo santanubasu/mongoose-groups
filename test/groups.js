@@ -72,25 +72,25 @@ describe("For groups module,", function() {
                     return groups.encloseGroup(group2, group6);
                 })
         });
-        it("tests direct enclosure", function(done) {
+        it("should return true when the first parameter directly encloses the second parameter", function(done) {
             groups.encloses(group1, group2)?done():done(new Error());
         });
-        it("tests not direct enclosure", function(done) {
+        it("should return false when the first parameter does not enclose the second parameter", function(done) {
             !groups.encloses(group2, group1)?done():done(new Error());
         });
-        it("tests not self enclosure", function(done) {
+        it("should return false when the first and second parameter are the same", function(done) {
             !groups.encloses(group1, group1)?done():done(new Error());
         });
-        it("tests indirect enclosure", function(done) {
+        it("should return true when the first parameter indirectly encloses the second parameter", function(done) {
             groups.encloses(group1, group3)?done():done(new Error());
         });
-        it("tests not indirect enclosure", function(done) {
+        it("should return false when the first parameter does not enclose the second parameter", function(done) {
             !groups.encloses(group3, group1)?done():done(new Error());
         });
-        it("tests orphan root enclosure", function(done) {
+        it("should return true when the first parameter encloses the second parameter, and the second parameter has one or more additional roots", function(done) {
             groups.encloses(group4, group3)?done():done(new Error());
         });
-        it("tests orphan root not enclosure", function(done) {
+        it("should return false when there is no enclosure path from the second parameter to the first parameter", function(done) {
             !groups.encloses(group1, group5)?done():done(new Error());
         });
     });
