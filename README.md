@@ -1,6 +1,6 @@
 # Mongoose Groups
 
-Mongoose Groups provides NodeJS projects (that use Mongoose) a means of defining and querying group enclosures, for example, does A contains B.  In the trivial case, this would not require anything beyond Mongoose's schema references or subdocuments functionality.  However, more complex applications have additional requirements:
+Mongoose Groups provides NodeJS projects (that use Mongoose) a means of defining and querying group enclosures, for example, does A contain B.  In the trivial case, this would not require anything beyond Mongoose's schema references or subdocuments functionality.  However, more complex applications have additional requirements:
 
 - Multi level group enclosure (A contains B contains C)
 - Multi leaf, multi root (A contains B, C contains B, C contains D)
