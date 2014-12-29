@@ -37,18 +37,39 @@ describe("For groups module,", function() {
         var group3 = Group({
             name:"Group 3"
         });
+        var group4 = Group({
+            name:"Group 4"
+        });
+        var group5 = Group({
+            name:"Group 5"
+        });
+        var group6 = Group({
+            name:"Group 6"
+        });
         before(function() {
-                return q
-                    .all([
-                        q.ninvoke(group1, "save"),
-                        q.ninvoke(group2, "save"),
-                        q.ninvoke(group3, "save")
-                    ])
+            return q
+                .all([
+                    q.ninvoke(group1, "save"),
+                    q.ninvoke(group2, "save"),
+                    q.ninvoke(group3, "save"),
+                    q.ninvoke(group4, "save"),
+                    q.ninvoke(group5, "save"),
+                    q.ninvoke(group6, "save")
+                ])
                 .then(function() {
                     return groups.encloseGroup(group1, group2);
                 })
                 .then(function() {
                     return groups.encloseGroup(group2, group3);
+                })
+                .then(function() {
+                    return groups.encloseGroup(group4, group3);
+                })
+                .then(function() {
+                    return groups.encloseGroup(group4, group5);
+                })
+                .then(function() {
+                    return groups.encloseGroup(group2, group6);
                 })
         });
         it("tests direct enclosure", function(done) {
@@ -65,6 +86,12 @@ describe("For groups module,", function() {
         });
         it("tests not indirect enclosure", function(done) {
             !groups.encloses(group3, group1)?done():done(new Error());
+        });
+        it("tests orphan root enclosure", function(done) {
+            groups.encloses(group4, group3)?done():done(new Error());
+        });
+        it("tests orphan root not enclosure", function(done) {
+            !groups.encloses(group1, group5)?done():done(new Error());
         });
     });
 })
