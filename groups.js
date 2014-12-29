@@ -1,7 +1,8 @@
 var mongoose = require("mongoose");
 var q = require("q");
 var _ = require("underscore");
-var polyfill = require("./polyfill.js");
+
+require("node-polyfill");
 
 var enable = module.exports.enable = function(schema, memberRef) {
     schema.plugin(function() {
