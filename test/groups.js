@@ -84,7 +84,7 @@ describe("For groups module,", function() {
         it("should return true when the first parameter indirectly encloses the second parameter", function(done) {
             groups.encloses(group1, group3)?done():done(new Error());
         });
-        it("should return false when the first parameter does not enclose the second parameter", function(done) {
+        it("should return false when the first parameter does not directly or indirectly enclose the second parameter", function(done) {
             !groups.encloses(group3, group1)?done():done(new Error());
         });
         it("should return true when the first parameter encloses the second parameter, and the second parameter has one or more additional roots", function(done) {
