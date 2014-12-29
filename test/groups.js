@@ -1,27 +1,40 @@
-require("../testSetup.js");
-
 var q = require("q");
 var mongoose = require("mongoose");
-var groups = require("groups");
+var mockgoose = require("mockgoose");
+var groups = require("../groups.js");
+
+mockgoose(mongoose);
+
+var userSchema = mongoose.Schema({
+    name:String
+});
+
+var groupSchema = mongoose.Schema({
+    name:String
+});
+groups.enable(groupSchema, "User");
+
+var Group = mongoose.model("Group", groupSchema);
+var User = mongoose.model("User", userSchema);
 
 describe("For groups module,", function() {
     before(function() {
-        return q.ninvoke(mongoose, "connect", "mongodb://localhost/testgroups");
+        mongoose.connect("mongodb://localhost/testgroups");
     });
     beforeEach(function() {
-        return q.ninvoke(mongoose.connection.db, "dropDatabase");
+        mongoose.connection.db.dropDatabase();
     });
     after(function() {
         mongoose.connection.close();
     })
     describe("tests enclosure,", function() {
-        var group1 = new schema.Group({
+        var group1 = Group({
             name:"Group 1"
         });
-        var group2 = new schema.Group({
+        var group2 = Group({
             name:"Group 2"
         });
-        var group3 = new schema.Group({
+        var group3 = Group({
             name:"Group 3"
         });
         before(function() {
