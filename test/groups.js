@@ -1,9 +1,7 @@
 var q = require("q");
+var _ = require("underscore");
 var mongoose = require("mongoose");
-var mockgoose = require("mockgoose");
 var groups = require("../groups.js");
-
-mockgoose(mongoose);
 
 var userSchema = mongoose.Schema({
     name:String
@@ -21,10 +19,8 @@ describe("For groups module,", function() {
     before(function() {
         mongoose.connect("mongodb://localhost/testgroups");
     });
-    beforeEach(function() {
-        mongoose.connection.db.dropDatabase();
-    });
     after(function() {
+        mongoose.connection.db.dropDatabase();
         mongoose.connection.close();
     })
     describe("tests enclosure,", function() {
@@ -92,6 +88,50 @@ describe("For groups module,", function() {
         });
         it("should return false when there is no enclosure path from the second parameter to the first parameter", function(done) {
             !groups.encloses(group1, group5)?done():done(new Error());
+        });
+    });
+    describe("tests membership,", function() {
+        var user1 = User({
+            name:"User 1"
+        });
+        var user2 = User({
+            name:"User 2"
+        });
+        var group1 = Group({
+            name:"Group 1"
+        });
+        var group2 = Group({
+            name:"Group 2"
+        });
+        var group3 = Group({
+            name:"Group 3"
+        });
+        before(function() {
+            return q
+                .all([
+                    q.ninvoke(group1, "save"),
+                    q.ninvoke(group2, "save"),
+                    q.ninvoke(group3, "save"),
+                    q.ninvoke(user1, "save"),
+                    q.ninvoke(user2, "save")
+                ])
+                .then(function() {
+                    groups.join(group1, user1);
+                    groups.join(group3, user2);
+                    return q
+                        .all([
+                            groups.encloseGroup(group1, group3),
+                            groups.encloseGroup(group2, group3)
+                    ])
+                })
+        });
+
+        it("should return a map containing one direct and two indirect enclosing groups when principal is a member of one one group that is enclosed by the other two groups", function(done) {
+            groups
+                .getEnclosureMap(user2, Group)
+                .then(function(enclosureMap) {
+                    ((group1.id in enclosureMap)&&(group2.id in enclosureMap)&&(group3.id in enclosureMap))?done():done(new Error());
+                });
         });
     });
 })
